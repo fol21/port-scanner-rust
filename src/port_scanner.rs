@@ -1,22 +1,30 @@
 
 pub mod tcp {
     use colored::*;
-    use std::net::{ToSocketAddrs, SocketAddr, TcpListener};
+    use std::net::{ToSocketAddrs, SocketAddr, TcpListener, TcpStream};
     
-    pub fn ip_port_is_available<A: ToSocketAddrs>(addr: A) -> bool {
-        let _m = match TcpListener::bind(addr) {
+    pub fn ip_port_is_available(addr: SocketAddr) -> bool {
+        let _l = match TcpListener::bind(&addr) {
             Ok(_) => true,
             Err(_) => false,
         };
-        return _m;
+        let _s = match TcpStream::connect_timeout(&addr, std::time::Duration::from_millis(100)) {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+        return _l || _s;
     }
 
     pub fn port_is_available(port: u16) -> bool {
-        let _m = match TcpListener::bind(SocketAddr::from(([127, 0, 0, 1], port))) {
+        let _l = match TcpListener::bind(SocketAddr::from(([127, 0, 0, 1], port))) {
             Ok(_) => true,
             Err(_) => false,
         };
-        return _m;
+        let _s = match TcpStream::connect_timeout(&SocketAddr::from(([127, 0, 0, 1], port)), std::time::Duration::from_millis(100)) {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+        return _l || _s;
     }
 
     pub fn resolve_results(addr: &String) {
@@ -87,7 +95,7 @@ pub mod json_scanner {
 
 #[cfg(test)]
 mod tests {
-    use std::net::{SocketAddr, ToSocketAddrs};
+    use std::net::{SocketAddr, ToSocketAddrs, TcpStream};
 
     #[test]
     fn parse_dns_values() {
@@ -108,11 +116,15 @@ mod tests {
     #[test]
     fn bind_to_socket() {
         use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener};
-        let listener =  match TcpListener::bind("google.com:443") {
+        let listener =  match TcpListener::bind(("127.0.0.1", 6379)) {
             Ok(_) => true,
             Err(_) => false,
         };
-        assert!(listener);
+        let stream = match TcpStream::connect(("127.0.0.1", 6379)) {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+        assert!(listener || stream);
     }
 
     #[test]

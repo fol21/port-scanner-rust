@@ -6,8 +6,9 @@
         ],
         "Localhost Adresses": [
             "localhost:80",
-            "localhost:80",
-            "127.0.0.1:443"
+            "localhost:8080",
+            "127.0.0.1:443",
+            "127.0.0.1:6379"
         ]
     }
 }
