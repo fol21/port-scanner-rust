@@ -1,5 +1,6 @@
 
 pub mod tcp {
+    use colored::*;
     use std::net::{ToSocketAddrs, SocketAddr, TcpListener};
     
     pub fn ip_port_is_available<A: ToSocketAddrs>(addr: A) -> bool {
@@ -38,17 +39,18 @@ pub mod tcp {
     
     fn _print_resolved_results(addr: SocketAddr) {
         let (ip, port) = (addr.ip(), addr.port());
-                
-        if ip_port_is_available(addr) {
-            println!("{}:{} is available", ip.to_string(), port);
-        } else {
-            println!("{}:{} is not available", ip.to_string(), port);
-        }
+        println!("{}:{} is {}",
+            ip.to_string(),
+            port,
+            if ip_port_is_available(addr) {"available".green().bold()} else {"not available".red().bold()}
+        );
     }
 }
 
 pub mod json_scanner {
     use std::net::{SocketAddr, ToSocketAddrs};
+    use colored::*;
+
 
     use super::tcp::*;
 
@@ -73,7 +75,7 @@ pub mod json_scanner {
     
     pub fn read_object(obj: &json::object::Object) {
         for (key, value) in obj.iter() {
-            println!("[{}]:\n", key);
+            println!("[{}]:\n", key.bold().yellow());
             match value {
                 json::JsonValue::Object(v) => read_object(v),
                 json::JsonValue::Array(v) => {read_adresses(v); println!("");},
@@ -101,6 +103,16 @@ mod tests {
         let addr = "4.4.4.4:80".parse::<SocketAddr>().expect("Unable to parse SocketAddr");
         println!("{}:{}", addr.ip(), addr.port());
         assert!(addr.is_ipv4() || addr.is_ipv6());
+    }
+
+    #[test]
+    fn bind_to_socket() {
+        use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener};
+        let listener =  match TcpListener::bind("google.com:443") {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+        assert!(listener);
     }
 
     #[test]
