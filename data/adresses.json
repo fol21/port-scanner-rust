@@ -1,4 +1,13 @@
-[
-    "google.com:80",
-    "google.com:443"
-]
+{
+    "Ip Adresses Test": {
+        "Google Adresses": [
+            "google.com:443",
+            "google.com:80"
+        ],
+        "Localhost Adresses": [
+            "localhost:80",
+            "localhost:80",
+            "127.0.0.1:443"
+        ]
+    }
+}

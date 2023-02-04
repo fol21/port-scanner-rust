@@ -17,6 +17,34 @@ pub mod tcp {
         };
         return _m;
     }
+
+    pub fn resolve_results(addr: &String) {
+        match addr.parse::<SocketAddr>() {
+            Ok(_a) => {
+                _print_resolved_results(_a);
+                return;
+            },
+            Err(_) => ()
+        };
+        match addr.to_socket_addrs() {
+            Ok(_a) => {
+                for a in _a.filter(|a| a.is_ipv4()) {
+                    _print_resolved_results(a);
+                }
+            },
+            Err(_) => ()
+        }
+    }
+    
+    fn _print_resolved_results(addr: SocketAddr) {
+        let (ip, port) = (addr.ip(), addr.port());
+                
+        if ip_port_is_available(addr) {
+            println!("{}:{} is available", ip.to_string(), port);
+        } else {
+            println!("{}:{} is not available", ip.to_string(), port);
+        }
+    }
 }
 
 pub mod json_scanner {
@@ -33,36 +61,10 @@ pub mod json_scanner {
     }
 
     pub fn read_adresses(values: &Vec<json::JsonValue>) {
-        for v in values {
+        for v in values.clone() {
             match v {
-                json::JsonValue::String(addr) => {
-                    match addr.parse::<SocketAddr>() {
-                        Ok(_a) => {
-                            let (ip, port) = (_a.ip(), _a.port());
-                            
-                            if ip_port_is_available(addr) {
-                                println!("Port {} is available", port);
-                            } else {
-                                println!("Port {} is not available", port);
-                            }
-                        },
-                        Err(_a) => {
-                            match addr.to_socket_addrs() {
-                                Ok(_a) => {
-                                    for a in _a.filter(|a| a.is_ipv4()) {
-                                        let (ip, port) = (a.ip(), a.port());
-                                        
-                                        if ip_port_is_available(addr) {
-                                            println!("Port {} is available", port);
-                                        } else {
-                                            println!("Port {} is not available", port);
-                                        }
-                                    }
-                                },
-                                Err(_) => ()
-                            }
-                        },
-                    };
+                json::JsonValue::Short(addr) => {
+                    resolve_results(&addr.to_string())
                 },
                 _ => ()
             }
@@ -71,14 +73,14 @@ pub mod json_scanner {
     
     pub fn read_object(obj: &json::object::Object) {
         for (key, value) in obj.iter() {
+            println!("[{}]:\n", key);
             match value {
                 json::JsonValue::Object(v) => read_object(v),
-                json::JsonValue::Array(v) => read_adresses(v),
+                json::JsonValue::Array(v) => {read_adresses(v); println!("");},
                 _ => ()
             }
         }
-    }
-    
+    }    
 }
 
 #[cfg(test)]
@@ -99,5 +101,18 @@ mod tests {
         let addr = "4.4.4.4:80".parse::<SocketAddr>().expect("Unable to parse SocketAddr");
         println!("{}:{}", addr.ip(), addr.port());
         assert!(addr.is_ipv4() || addr.is_ipv6());
+    }
+
+    #[test]
+    fn read_strings_from_json() {
+        let json = json::parse(r#"["google.com:80","google.com:443"]"#).expect("Unable to parse json");
+        match json {
+            json::JsonValue::Array(values) => {
+                for v in values {
+                   assert!(v.is_string());
+                }
+            }
+            _ => panic!("Root is not an array"),
+        }
     }
 }
