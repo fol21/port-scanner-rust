@@ -11,5 +11,5 @@ fn main() {
     let raw = read_to_string(f).expect("Unable to read file");
 
     let json = json::parse(&*raw).expect("Unable to parse json");
-    read_from_json(&json);
+    read_from_json_sync(&json);
 }

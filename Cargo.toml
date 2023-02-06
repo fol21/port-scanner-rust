@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 colored = "2.0.0"
 json = "0.12.4"
+threadpool = "1.8.1"
