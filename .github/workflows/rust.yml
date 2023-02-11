@@ -25,5 +25,5 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         # Artifact name
-        name: port-scanner-${{ matrix.os }}
-        path: port-scanner-${{ matrix.os }}
+        name: target/release
+        path: target/release
