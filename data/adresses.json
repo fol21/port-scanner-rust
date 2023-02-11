@@ -9,6 +9,25 @@
             "localhost:8080",
             "127.0.0.1:443",
             "127.0.0.1:6379"
+        ],
+        "Azure Devops Adresses": [
+            "radixeng.pkgs.visualstudio.com:443",
+            "radixeng.visualstudio.com:443",
+            "radixeng.vsblob.visualstudio.com:443",
+            "radixeng.vsrm.visualstudio.com:443",
+            "radixeng.vssps.visualstudio.com:443",
+            "radixeng.vstmr.visualstudio.com:443",
+            "*.blob.core.windows.net",
+            "*.dev.azure.com:443",
+            "*.vsassets.io:443",
+            "*.vsblob.visualstudio.com:443",
+            "*.vssps.visualstudio.com:443",
+            "*.vstmr.visualstudio.com:443",
+            "app.vssps.visualstudio.com:443",
+            "dev.azure.com:443",
+            "login.microsoftonline.com:443",
+            "management.core.windows.net:443",
+            "vstsagentpackage.azureedge.net:443"
         ]
     }
 }
