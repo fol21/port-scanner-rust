@@ -2,7 +2,10 @@
     "Ip Adresses Test": {
         "Google Adresses": [
             "google.com:443",
-            "google.com:80"
+            "google.com:80",
+            "https://google.com",
+            "https://google.com:[8001:8003]",
+            "https://google.com:[9000:3:9004]"
         ],
         "Localhost Adresses": [
             "localhost:80",
