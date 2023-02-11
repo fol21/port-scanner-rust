@@ -21,3 +21,9 @@ jobs:
       run: cargo build --release --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        # Artifact name
+        name: port-scanner-${{ matrix.os }}
+        path: port-scanner-${{ matrix.os }}
