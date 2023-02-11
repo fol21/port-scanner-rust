@@ -27,12 +27,6 @@ The JSON file must have this format. *port-scanner-rust* accepts nested objects 
             "127.0.0.1:6379"
         ],
         "Azure Devops Adresses": [
-            "radixeng.pkgs.visualstudio.com:443",
-            "radixeng.visualstudio.com:443",
-            "radixeng.vsblob.visualstudio.com:443",
-            "radixeng.vsrm.visualstudio.com:443",
-            "radixeng.vssps.visualstudio.com:443",
-            "radixeng.vstmr.visualstudio.com:443",
             "*.blob.core.windows.net",
             "*.dev.azure.com:443",
             "*.vsassets.io:443",
