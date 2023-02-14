@@ -20,7 +20,32 @@
                 }
             },
             "args": [
+                "scan",
                 "./data/adresses.json"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'port-scanner-rust' with async flag",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=port-scanner-rust",
+                    "--package=port-scanner-rust"
+                ],
+                "filter": {
+                    "name": "port-scanner-rust",
+                    "kind": "bin"
+                }
+            },
+            "args": [
+                "scan",
+                "./data/adresses.json",
+                "--async",
+                "--workers",
+                "4"
             ],
             "cwd": "${workspaceFolder}"
         },
