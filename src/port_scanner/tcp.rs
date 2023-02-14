@@ -29,6 +29,26 @@ pub fn port_is_available(port: u16) -> bool {
     return _l || _s;
 }
 
+pub fn resolve_results_async(message: &mut String, addr: &String) {
+    match addr.parse::<SocketAddr>() {
+        Ok(_a) => {
+            _format_resolved_results(message, _a);
+            return;
+        },
+        Err(_) => ()
+    };
+    match addr.to_socket_addrs() {
+        Ok(_a) => {
+            message.push_str(format!("[{}]:\n", addr.bold().italic()).as_str());   
+            for a in _a.filter(|a| a.is_ipv4()) {
+                _format_resolved_results(message, a);
+            }
+            message.push_str(format!("[{}]\n", "end".bold().italic()).as_str());
+        },
+        Err(_) => ()
+    }
+}
+
 pub fn resolve_results(addr: &String) {
     match addr.parse::<SocketAddr>() {
         Ok(_a) => {
@@ -108,7 +128,10 @@ pub fn process_input(input: &str) -> StringOrVec {
 
 fn _process_port_array(input: &str) -> Option<Vec<String>> {
     let _pattern = r"^(?P<domain>.*):\[(?P<start>\d{1,}):(?:(?P<step>\d{1,})?:)?(?P<end>\d{1,})\]$";
-    let re = Regex::new(_pattern).unwrap();
+    let re = match Regex::new(_pattern) {
+        Ok(re) => re,
+        Err(error) => panic!("Error: {}", error),
+    };
     let limits = match re.captures(input) {
         Some(caps) => Some((
             caps.name("domain").unwrap().as_str().to_string(),
@@ -151,7 +174,20 @@ fn _print_resolved_results(addr: SocketAddr) {
         state
     );
 }
-
+fn _format_resolved_results(message: &mut String, addr: SocketAddr) {
+    let (ip, port) = (addr.ip(), addr.port());
+    let state = match ip_port_is(addr) {
+        PortState::Available => "available".green().bold(),
+        PortState::Bound => "bound".cyan().bold(),
+        PortState::Closed => "closed".red().bold(),
+        PortState::Uknown => "uknown".red().bold(),
+    };
+    message.push_str(format!("{}:{} is {}\n",
+        ip.to_string(),
+        port,
+        state
+    ).as_str());
+}
 #[cfg(test)]
 mod tests {
     use super::*;

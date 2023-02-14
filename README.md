@@ -12,6 +12,7 @@ The JSON file must have this format. *port-scanner-rust* accepts nested objects 
 
 ````json
 {
+    "Github_Adress": "github.com:443",
     "Ip Adresses Test": {
         "Google Adresses": [
             "google.com:443",
