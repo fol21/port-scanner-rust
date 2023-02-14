@@ -1,7 +1,7 @@
 #![feature(proc_macro_hygiene)]
+
 pub mod port_scanner;
 
-use std::env;
 use std::fs::File;
 use std::io::read_to_string;
 use commander_rust::{ Cli, command, option, entry, run };

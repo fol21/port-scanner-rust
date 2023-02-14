@@ -2,10 +2,16 @@
 Simple tests for port availability in an ip address.
 
 ## Usage
-Reads a JSON file and tests the port states in local or not adresses.
+Reads a JSON file and tests the port states in local or not adresses. You can call the executables as it shows:
 
 ````bash
-port-scanner-rust path_to_json/adresses.json
+port-scanner-rust scan path_to_json/adresses.json
+````
+````bash
+port-scanner-rust scan path_to_json/adresses.json --async 
+````
+````bash
+port-scanner-rust scan path_to_json/adresses.json --async --workers 4
 ````
 
 The JSON file must have this format. *port-scanner-rust* accepts nested objects and treats then as sessions until an array of adresses is presented. The example above provides the accepted sintax for adress (ip and ports), including a port range with or without a custom step:
