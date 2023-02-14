@@ -17,10 +17,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build
-      run: cargo build --release --verbose
+    - name: Setup Nightly version
+      run: rustup install nightly
+    - name: Set nightly as default
+      run: rustup default nightly
     - name: Run tests
       run: cargo test --verbose
+    - name: Build
+      run: cargo build --release --verbose
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.2
       with:
